@@ -1,0 +1,140 @@
+<html>
+	<head>
+		<title>Infinit Scroll Example</title>
+	<style>
+	.content-container {
+      display: relative;
+      margin : 100px
+      }
+
+.content-container .repo {
+        padding:10px;
+        margin:5px;
+        border-style: ridge ;
+}
+
+.content-container .content {}
+  .content .size-full {
+    width: 100%;
+    height: auto;
+   
+  }
+
+.content-container .title {
+  font-weight: 1000;
+  font-size: 20;
+}
+
+.content-container .desc{
+  font-size: 14;
+  font-family: 'Vollkorn', serif;
+}
+
+	</style>
+	</head>
+<body>
+
+<div style="display: flex;justify-content: center;">
+<h1> Github Public Repositories</h1>
+</div>
+<hr>
+
+
+<div>
+
+<div class="content-container">
+</div>
+
+
+
+</div>
+
+<script>
+	var repo_id = 1;
+	var fetch_link=`https://api.github.com/repositories?since=${repo_id}`;
+	var xhr = new XMLHttpRequest();
+	var contentContainer = document.getElementsByClassName('content-container')[0];
+	function getDistFromBottom () {
+  
+  		var scrollPosition = window.pageYOffset;
+  		var windowSize     = window.innerHeight;
+  		var bodyHeight     = document.body.offsetHeight;
+
+  		return Math.max(bodyHeight - (scrollPosition + windowSize), 0);
+	}
+	
+xhr.onload = function() {
+  if(xhr.status === 200) {
+    data = xhr.responseText
+    dataObj = JSON.parse(data);
+    fetch_link = xhr.getResponseHeader("link").split(';')[0].replace(/<|>/g,'').replace('>','');
+    console.log(fetch_link);
+    // for iterating through the data
+    // Using a ForEach
+    console.log(dataObj)
+    dataObj.forEach(function(post, index) {
+      
+    //console.log(post);
+    var postElement = document.createElement('div')
+      postElement .classList.add('repo');
+      //var repo_id=document.createElement('');
+      //repo_id.appendChild(document.createTextNode(post.id));
+
+      var title = document.createElement('h3');
+      title.appendChild(document.createTextNode(post.full_name));
+      title.classList.add('title');
+      
+      var description = document.createElement('p');
+      description.appendChild(document.createTextNode(post.description));
+      description.classList.add('desc');
+      
+      var html_link = document.createElement('a');
+      html_link.appendChild(document.createTextNode(post.html_url));
+      html_link.href=post.html_url;
+      
+      var hrElem = document.createElement('hr');
+      hrElem.classList.add('separator');
+
+      postElement.appendChild(title);
+      postElement.appendChild(description);
+      postElement.appendChild(html_link);
+      postElement.appendChild(hrElem);
+      
+      contentContainer.appendChild(postElement);
+    
+    })
+
+  }else{
+	data = xhr.responseText;
+        error = JSON.parse(data);
+ 	alert(error.message);
+  }
+
+};
+
+xhr.onerror = function () { 
+	console.log(xhr);
+    
+};
+
+xhr.open('GET', fetch_link , true);
+xhr.send();
+
+document.addEventListener('scroll', function() {
+	console.log(scroll);
+	
+        distToBottom = getDistFromBottom();
+        if (distToBottom > 0 && distToBottom <= 8888) {
+          
+          xhr.open('GET', fetch_link , true);
+          xhr.send();
+        }
+	
+});
+
+</script>
+
+
+</body>
+
+</html>
