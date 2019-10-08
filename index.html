@@ -81,24 +81,39 @@ xhr.onload = function() {
       //repo_id.appendChild(document.createTextNode(post.id));
 
       var title = document.createElement('h3');
-      title.appendChild(document.createTextNode(post.full_name));
+      title.appendChild(document.createTextNode(post.name));
       title.classList.add('title');
+      
+      var full_name = document.createElement('h6');
+      full_name.appendChild(document.createTextNode(post.full_name));
       
       var description = document.createElement('p');
       description.appendChild(document.createTextNode(post.description));
       description.classList.add('desc');
       
+      var owner_name= document.createElement('p');
+      owner_name.appendChild(document.createTextNode(`Owner Name: ${post.owner.login}` ));
+      owner_name.classList.add('desc');      
+      
+      var owner_name= document.createElement('p');
+      owner_name.appendChild(document.createTextNode(`Owner Type: ${post.owner.type}` ));
+      owner_name.classList.add('desc');   
+
       var html_link = document.createElement('a');
       html_link.appendChild(document.createTextNode(post.html_url));
       html_link.href=post.html_url;
       
-      var hrElem = document.createElement('hr');
-      hrElem.classList.add('separator');
+      
+      var btn= document.createElement('BUTTON');
+      btn.innerHTML= "Edit";
+      
+      
+      
 
       postElement.appendChild(title);
       postElement.appendChild(description);
       postElement.appendChild(html_link);
-      postElement.appendChild(hrElem);
+      postElement.appendChild(btn);
       
       contentContainer.appendChild(postElement);
     
